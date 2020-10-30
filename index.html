@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Autocomplete demo</title>
+    <script src="dist/bundle.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+    <style>
+        .result {
+            padding: 0.3em 0em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row" style="height: 5rem">
+        </div>
+
+        <div class="row">
+            <div class="column column-80 column-offset-10">
+                <input id="autocomplete" type="text" placeholder="Ask a question">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column column-100" id="results">
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const inputField = document.getElementById("autocomplete");
+        const resultsElement = document.getElementById("results");
+
+        const autocomplete = new TreeComplete([
+            "https://termen.opoi.org/nta",
+            "https://termen.opoi.org/vtmk",
+            "https://termen.opoi.org/cht",
+            "https://termen.opoi.org/rkdartists"
+        ], 10);
+
+        function splitValues(quads) {
+            const primaryLabels = [];
+            const secondaryLabels = [];
+
+            for (const quad of quads) {
+                const predicate = quad.predicate.value;
+                const value = quad.object.value;
+
+                let destination;
+                if (predicate === "http://schema.org/name" || predicate === "http://www.w3.org/2004/02/skos/core#prefLabel") {
+                    destination = primaryLabels;
+                } else {
+                    destination = secondaryLabels;
+                }
+
+                destination.push(value);
+            }
+
+            return primaryLabels.sort().concat(secondaryLabels.sort());
+        }
+
+        function showResult(uri, values) {
+            if (resultsElement.innerHTML.length > 0) {
+                resultsElement.innerHTML += '<hr style="margin: 0">'
+            }
+
+            let e = ""
+
+            e += '<div class="row result">'
+                + '<div class="column column-20 column-offset-10"> <strong>'
+                + values[0]
+                + "</strong>"
+
+            if (values.length > 1) {
+                e += '<br>' + values[1] + "</div>"
+            } else {
+                e += "</div>"
+            }
+
+            e += '<div class="column column-60" style="text-align: right;"> <a href='
+                + uri + ">"
+                + uri + "</a></div>"
+                + '</div>';
+
+            resultsElement.innerHTML += e;
+        }
+
+        function reset() {
+            resultsElement.innerHTML = "";
+            currentSubjects = new Set();
+        }
+
+        autocomplete.on("reset", () => {
+            reset();
+        });
+
+        let currentSubjects = new Set();
+
+        autocomplete.on("member", (data) => {
+            if (data.length > 0) {
+                const subject = data[0].subject.value;
+
+                if (!currentSubjects.has(subject)) {
+                    currentSubjects.add(subject);
+                    const literals = splitValues(data);
+                    showResult(subject, literals);
+                } 
+            }
+        })
+
+        autocomplete.on("end", (quad) => {
+            resultsElement.innerHTML += '<hr style="margin: 0">'
+        });
+
+        inputField.addEventListener("input", function (e) {
+            var a, b, i, val = this.value;
+
+            if (!val) {
+                resultsElement.innerHTML = "";
+                return false;
+            }
+
+            reset();
+            autocomplete.query(val);
+        });
+    </script>
+</body>
+
+</html>
