@@ -7,7 +7,7 @@
     "webpack": "webpack --config webpack.config.js --mode=production"
   },
   "dependencies": {
-    "@hdelva/termennetwerk_client": "^1.0.7",
+    "@hdelva/termennetwerk_client": "^2.0.5",
     "rdf-string": "^1.5.0"
   },
   "devDependencies": {

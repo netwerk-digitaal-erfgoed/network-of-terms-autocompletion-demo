@@ -3,7 +3,7 @@ import * as RdfString from "rdf-string";
 
 let currentSubjects = [];
 
-const client = new AutoComplete([
+const client = new AutoComplete.examples.StrictAutoComplete([
     "https://termen.opoi.org/nta",
     "https://termen.opoi.org/vtmk",
     "https://termen.opoi.org/cht",
