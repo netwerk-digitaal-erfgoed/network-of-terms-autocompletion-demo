@@ -1,42 +1,46 @@
-import AutoComplete from "@hdelva/termennetwerk_client";
+import * as Autocomplete from "@hdelva/termennetwerk_client";
 import * as RdfString from "rdf-string";
 
-let currentSubjects = [];
+let currentResults = [];
 
-const client = new AutoComplete.examples.StrictAutoComplete([
+const client = new Autocomplete.StrictAutoComplete([
     "https://termen.opoi.org/nta",
     "https://termen.opoi.org/vtmk",
     "https://termen.opoi.org/cht",
     "https://termen.opoi.org/rkdartists"
 ], 10);
 
-client.on("data", (data) => {
-    currentSubjects.push(data.subject.value);
-    const results = [];
-    for (const quad of client.resolveSubject(data.subject.value)) {
-        results.push(RdfString.quadToStringQuad(quad));
+client.on("data", (quad, meta) => {
+    const allQuads = [];
+    for (const otherQuad of client.resolveSubject(quad.subject.value)) {
+        // sending objects to the main thread implicitly serializes everything
+        // we lose all the rdf-js methods, unless we explicitly (de)serialize those ourselves
+        allQuads.push(RdfString.quadToStringQuad(otherQuad));
     }
-    postMessage(["member", results]);
+    meta.quads = allQuads;
+    currentResults.push([quad, meta]);
+    postMessage(["data", RdfString.quadToStringQuad(quad), meta]);
 })
 
 client.on("reset", () => {
-    currentSubjects = [];
+    currentResults = [];
     postMessage(["reset"]);
 })
 
 client.on("end", () => {
     postMessage(["reset"]);
-    for (const subject of currentSubjects) {
-        const results = [];
-        for (const quad of client.resolveSubject(subject)) {
-            results.push(RdfString.quadToStringQuad(quad));
+    for (const [quad, meta] of currentResults) {
+        const allQuads = [];
+        for (const otherQuad of client.resolveSubject(quad.subject.value)) {
+            allQuads.push(RdfString.quadToStringQuad(otherQuad));
         }
-        postMessage(["member", results]);
+        meta.quads = allQuads;
+        postMessage(["data", RdfString.quadToStringQuad(quad), meta]);
     }
     postMessage(["end"]);
 })
 
 onmessage = function (e) {
-    currentSubjects = new Set();
+    currentResults = [];
     client.query(e.data);
 }
