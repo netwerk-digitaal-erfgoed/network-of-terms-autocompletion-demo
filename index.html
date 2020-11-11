@@ -153,8 +153,10 @@
             currentResults = new Map();
         }
 
-        autocomplete.on("reset", () => {
-            reset();
+        autocomplete.on("reset", (meta) => {
+            if (meta.query === currentQuery) {
+                reset();
+            }
         });
 
         let currentResults = new Map();

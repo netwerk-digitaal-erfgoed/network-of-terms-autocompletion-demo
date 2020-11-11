@@ -19,25 +19,25 @@ client.on("data", (quad, meta) => {
     }
     meta.quads = allQuads;
     currentResults.push([quad, meta]);
-    postMessage(["data", RdfString.quadToStringQuad(quad), meta]);
+    postMessage(["data", meta, RdfString.quadToStringQuad(quad)]);
 })
 
-client.on("reset", () => {
+client.on("reset", (meta) => {
     currentResults = [];
-    postMessage(["reset"]);
+    postMessage(["reset", meta]);
 })
 
-client.on("end", () => {
-    postMessage(["reset"]);
+client.on("end", (meta) => {
+    postMessage(["reset", meta]);
     for (const [quad, meta] of currentResults) {
         const allQuads = [];
         for (const otherQuad of client.resolveSubject(quad.subject.value)) {
             allQuads.push(RdfString.quadToStringQuad(otherQuad));
         }
         meta.quads = allQuads;
-        postMessage(["data", RdfString.quadToStringQuad(quad), meta]);
+        postMessage(["data", meta, RdfString.quadToStringQuad(quad)]);
     }
-    postMessage(["end"]);
+    postMessage(["end", meta]);
 })
 
 onmessage = function (e) {

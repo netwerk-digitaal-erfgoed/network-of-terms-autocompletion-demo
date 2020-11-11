@@ -11,11 +11,11 @@ export default class AutoCompleteWorker extends EventEmitter {
 
         const self = this;
         this.worker.onmessage = (e) => {
-            const [type, value, meta] = e.data;
+            const [type, meta, value] = e.data;
             if (type == "reset") {
-                self.emit("reset");
+                self.emit("reset", meta);
             } else if (type == "end") {
-                self.emit("end");
+                self.emit("end", meta);
             } else {
                 const allQuads = [];
                 for (const otherQuad of meta.quads) {
