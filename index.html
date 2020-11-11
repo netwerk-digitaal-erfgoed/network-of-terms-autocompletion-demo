@@ -160,6 +160,10 @@
         let currentResults = new Map();
 
         autocomplete.on("data", (quad, meta) => {
+            if (currentQuery !== meta.query) {
+                return;
+            }
+
             const subject = quad.subject.value;
 
             let dataColumn;
@@ -204,6 +208,7 @@
 
             if (!val) {
                 reset();
+                currentQuery = "";
             } else if (val.trim() !== currentQuery) {
                 reset();
                 currentQuery = val.trim();
