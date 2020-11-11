@@ -204,9 +204,7 @@
 
             if (!val) {
                 reset();
-            }
-
-            if (val.trim() !== currentQuery) {
+            } else if (val.trim() !== currentQuery) {
                 reset();
                 currentQuery = val.trim();
                 autocomplete.query(val);
