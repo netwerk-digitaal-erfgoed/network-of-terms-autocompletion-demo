@@ -1,4 +1,4 @@
-import Worker from "./workers/worker";
+//import Worker from 'worker-loader!./workers/worker';
 import * as RdfString from "rdf-string";
 import { EventEmitter } from "events";
 
@@ -7,7 +7,7 @@ export default class AutoCompleteWorker extends EventEmitter {
 
     constructor() {
         super();
-        this.worker = new Worker();
+        this.worker = new Worker('./workers/worker.js', { type: 'module' });
 
         const self = this;
         this.worker.onmessage = (e) => {

@@ -1,4 +1,5 @@
 const path = require("path");
+const WorkerPlugin = require('worker-plugin');
 
 const browserConfig = {
     entry: "./src/index.ts",
@@ -11,12 +12,6 @@ const browserConfig = {
                     loader: "ts-loader",
                 },
                 exclude: /node_modules/, 
-            }, {
-                test: /worker\.js$/,
-                use: { 
-                    loader: 'worker-loader',
-                    options: { inline: 'fallback' },
-                },
             }
         ],
     },
@@ -29,10 +24,14 @@ const browserConfig = {
     output: {
         filename: "bundle.js",
         path: path.resolve(__dirname, "dist"),
+        publicPath: "./dist/",
         library: "TreeComplete",
         libraryTarget: "umd",
         libraryExport: "default"
-    }
+    },
+    plugins: [
+        new WorkerPlugin()
+    ]
 };
 
 module.exports = browserConfig;
