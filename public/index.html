@@ -58,12 +58,7 @@
             const resultsElement = document.getElementById("results");
             let currentQuery = "";
 
-            const autocomplete = new TreeComplete([
-                "https://termen.opoi.org/nta",
-                "https://termen.opoi.org/vtmk",
-                "https://termen.opoi.org/cht",
-                "https://termen.opoi.org/rkdartists"
-            ], 10);
+            const autocomplete = new TreeComplete();
 
             function isPrimaryLabel(quad) {
                 const predicate = quad.predicate.value;

@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  files:
+    image: files
+    build:
+      context: .
+    ports:
+      - "80:80"
