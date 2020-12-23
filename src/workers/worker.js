@@ -4,10 +4,9 @@ import * as RdfString from "rdf-string";
 let currentResults = [];
 
 const client = new Autocomplete.StrictAutoComplete([
-    "https://termen.opoi.org/nta",
-    "https://termen.opoi.org/vtmk",
-    "https://termen.opoi.org/cht",
-    "https://termen.opoi.org/rkdartists"
+    "https://demo.netwerkdigitaalerfgoed.nl/fragments/vtmk/",
+    "https://demo.netwerkdigitaalerfgoed.nl/fragments/cht/",
+    "https://demo.netwerkdigitaalerfgoed.nl/fragments/wo2/"
 ], 10);
 
 client.on("data", (quad, meta) => {
