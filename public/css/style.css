@@ -1,0 +1,59 @@
+h1, h2, h3 {
+    font-family: "Poppins", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+a, a:hover {
+    color: #0a3dfa;
+}
+
+footer {
+    margin-top: 3rem;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    background-color: #fbfbfb;
+    box-shadow: 0 50vh 0 50vh #fbfbfb;
+}
+
+footer p {
+    margin-bottom: .25rem;
+}
+
+footer p:last-child {
+    margin-bottom: 0;
+}
+
+#beta {
+    height: 2em;
+}
+
+.note {
+    position: absolute;
+    background: #fc8c29;
+    font-size: 1em;
+    color: white;
+    padding: 0.15em 0.3em;
+    margin-left: 0.2em;
+    transform: rotate(10deg);
+}
+
+.note a {
+    color: white;
+}
+
+.result span+span:before {
+    content: " | ";
+}
+
+.result p {
+    font-size: 1.25rem;
+}
+
+.secondary {
+    font-size: 1.0rem;
+}
+
+mark {
+    padding: 0;
+    font-weight: bold;
+    background-color: #fff;
+}
